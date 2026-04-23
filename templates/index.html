@@ -1,67 +1,70 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Music Cover Generator</title>
+    <title>Music Cover Generator</title>
 </head>
 <body>
 
-<h2>Upload MP3</h2>
+<h1>Upload MP3</h1>
 
 <input type="file" id="file">
-<button onclick="upload()">Upload</button>
-
-<h3 id="title"></h3>
-<img id="cover" width="300"/>
+<button onclick="uploadFile()">Upload</button>
 
 <br><br>
 
-<button onclick="regen()">Regenerate</button>
-<button onclick="download()">Download MP3</button>
+<button onclick="regenerate()">Regenerate</button>
+
+<br><br>
+
+<img id="cover" style="width:300px;">
+<br>
+<a id="download" download>Download MP3</a>
 
 <script>
-let currentFile = ""
+let lastFile = null;
 
-function upload() {
-  let file = document.getElementById("file").files[0]
-  let form = new FormData()
-  form.append("file", file)
+async function uploadFile() {
+    const fileInput = document.getElementById("file");
+    const file = fileInput.files[0];
 
-  currentFile = file.name
+    if (!file) {
+        alert("Select a file");
+        return;
+    }
 
-  fetch("/upload", { method: "POST", body: form })
-  .then(r => r.json())
-  .then(d => {
-    document.getElementById("cover").src = d.cover
-    document.getElementById("title").innerText = d.title
-  })
+    lastFile = file;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("/upload", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await res.json();
+
+    document.getElementById("cover").src = data.cover_url + "?t=" + Date.now();
+    document.getElementById("download").href = data.mp3_url;
 }
 
-function regen() {
-  fetch("/regenerate", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({file: currentFile})
-  })
-  .then(r => r.json())
-  .then(d => {
-    document.getElementById("cover").src = d.cover
-  })
-}
+async function regenerate() {
+    if (!lastFile) {
+        alert("Upload first");
+        return;
+    }
 
-function download() {
-  fetch("/download", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({file: currentFile})
-  })
-  .then(r => r.blob())
-  .then(blob => {
-    let url = window.URL.createObjectURL(blob)
-    let a = document.createElement("a")
-    a.href = url
-    a.download = "final.mp3"
-    a.click()
-  })
+    const formData = new FormData();
+    formData.append("file", lastFile);
+
+    const res = await fetch("/upload", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await res.json();
+
+    document.getElementById("cover").src = data.cover_url + "?t=" + Date.now();
 }
 </script>
 
