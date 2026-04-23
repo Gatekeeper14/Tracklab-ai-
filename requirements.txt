@@ -1,5 +1,3 @@
 flask
-openai
 pillow
-mutagen
-requests
+werkzeug
