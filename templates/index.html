@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Music Cover Generator</title>
+</head>
+<body>
+
+<h2>Upload MP3</h2>
+
+<input type="file" id="file">
+<button onclick="upload()">Upload</button>
+
+<h3 id="title"></h3>
+<img id="cover" width="300"/>
+
+<br><br>
+
+<button onclick="regen()">Regenerate</button>
+<button onclick="download()">Download MP3</button>
+
+<script>
+let currentFile = ""
+
+function upload() {
+  let file = document.getElementById("file").files[0]
+  let form = new FormData()
+  form.append("file", file)
+
+  currentFile = file.name
+
+  fetch("/upload", { method: "POST", body: form })
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById("cover").src = d.cover
+    document.getElementById("title").innerText = d.title
+  })
+}
+
+function regen() {
+  fetch("/regenerate", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({file: currentFile})
+  })
+  .then(r => r.json())
+  .then(d => {
+    document.getElementById("cover").src = d.cover
+  })
+}
+
+function download() {
+  fetch("/download", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({file: currentFile})
+  })
+  .then(r => r.blob())
+  .then(blob => {
+    let url = window.URL.createObjectURL(blob)
+    let a = document.createElement("a")
+    a.href = url
+    a.download = "final.mp3"
+    a.click()
+  })
+}
+</script>
+
+</body>
+</html>
