@@ -1,4 +1,5 @@
-python-telegram-bot==21.0  
-flask  
-mutagen  
-Pillow
+flask
+openai
+pillow
+mutagen
+requests
