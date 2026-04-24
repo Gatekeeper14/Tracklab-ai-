@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MP3 Generator</title>
+</head>
+<body>
+
+<h1>Upload MP3</h1>
+
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <button type="submit">Upload</button>
+</form>
+
+<br>
+
+<form action="/regenerate" method="post">
+    <button type="submit">Regenerate Cover</button>
+</form>
+
+<br>
+
+<a href="/download">Download MP3</a>
+
+</body>
+</html>
