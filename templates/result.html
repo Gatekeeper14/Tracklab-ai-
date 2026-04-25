@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+  <title>TRACKLAB AI — Done</title>
+  <style>
+    body { background:#000; color:#d4af37; font-family:'Cormorant Garamond', serif;
+           max-width:600px; margin:40px auto; padding:20px; text-align:center; }
+    img { max-width:100%; border:2px solid #d4af37; margin:20px 0; }
+    a { display:inline-block; margin:12px; padding:12px 24px;
+        background:#d4af37; color:#000; text-decoration:none; font-weight:bold; }
+    a:hover { background:#fff; }
+  </style>
+</head>
+<body>
+  <h1>👑 {{ artist }} — {{ title }}</h1>
+  <p>{{ genre }} · {{ year }}</p>
+  <img src="/cover/{{ cover_filename }}" alt="cover art">
+  <div>
+    <a href="/download/{{ output_filename }}">⬇ Download MP3</a>
+    <a href="/">← Upload another</a>
+  </div>
+</body>
+</html>
